@@ -5,6 +5,7 @@
 #include <thread>
 #include <mutex>
 #include <chrono>
+#include <random>
 #include "Timer.h"
 
 //using namespace std;
@@ -36,9 +37,10 @@ void drawProgressBar(size_t i) {
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
     auto start = std::chrono::high_resolution_clock::now();
     for (int j = 15; j < 48; j++) {
-        srand((unsigned)time(NULL));
-        int random = (rand() % 10);
-        std::this_thread::sleep_for(std::chrono::milliseconds(random * 10 * (i + 1)));
+        std::random_device rd;
+        std::mt19937 gen(rd());
+        std::uniform_int_distribution<> distrib(1, 9);
+        std::this_thread::sleep_for(std::chrono::milliseconds(distrib(gen) * 100));
         m.lock();
         consol_parameter::SetPosition(j, (i + 2));
         std::cout << (char)254u;
